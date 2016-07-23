@@ -90,6 +90,9 @@ android.applicationVariants.all { variant ->
       }
       defaultFile.write(defaultText, UTF8)
 
+      // Delete the file, so our APK can be smaller.
+      if (!esFile.delete()) throw new AssertionError("Spain file was not deleted. Aborting.")
+
       println "Finish changing default texts to Spanish ones."
     }
   }
