@@ -49,7 +49,9 @@ android.applicationVariants.all { variant ->
 
       final String UTF8 = "UTF-8"
 
+      // Get the default file in which we will put our Spain strings.
       File defaultFile = file("${buildDir}/intermediates/res/merged/${variant.dirName}/values/values.xml")
+      // Get the Spanish file where we will get our strings.
       File esFile = file("${buildDir}/intermediates/res/merged/${variant.dirName}/values-es/values-es.xml")
 
       String defaultText = defaultFile.getText(UTF8)
