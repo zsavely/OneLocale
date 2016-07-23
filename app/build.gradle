@@ -18,7 +18,71 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+  productFlavors {
+    demo {
+      applicationIdSuffix ".demo"
+    }
+    spain {
+      resConfigs "es"
+      applicationIdSuffix ".spain"
+    }
+  }
 }
 
 dependencies {
+}
+
+/** A possible way of changing the default locale in an APK. */
+android.applicationVariants.all { variant ->
+  // Proceed if current build is for Spain.
+  if ("spainRelease".equals(variant.name)) {
+    variant.mergeResources.doLast {
+      println "Start changing default texts to Spanish ones."
+
+      final String UTF8 = "UTF-8"
+
+      File defaultFile = file("${buildDir}/intermediates/res/merged/${variant.dirName}/values/values.xml")
+      File esFile = file("${buildDir}/intermediates/res/merged/${variant.dirName}/values-es/values-es.xml")
+
+      String defaultText = defaultFile.getText(UTF8)
+      String esText = esFile.getText(UTF8)
+
+      def defaultStringsList = []
+      def esStringsList = []
+
+      final String START_TAG = "<string "
+      final String END_TAG = "</string>"
+      final int END_OFFSET = 8
+
+      int startIndex = esText.indexOf(START_TAG)
+      int endIndex;
+      while (startIndex > 0) {
+        endIndex = esText.indexOf(END_TAG, startIndex) + END_OFFSET
+        String str = esText[startIndex..endIndex]
+        esStringsList.add(str)
+        startIndex = esText.indexOf(START_TAG, endIndex)
+      }
+
+      startIndex = defaultText.indexOf(START_TAG)
+      while (startIndex > 0) {
+        endIndex = defaultText.indexOf(END_TAG, startIndex) + END_OFFSET
+        String str = defaultText[startIndex..endIndex]
+        defaultStringsList.add(str)
+        startIndex = defaultText.indexOf(START_TAG, endIndex)
+      }
+
+      final String VALUE_TAG = "\">"
+      for (String defaultString : defaultStringsList) {
+        for (String esString : esStringsList) {
+          if (defaultString[0..defaultString.indexOf(VALUE_TAG)].equals(esString[0..esString.indexOf(VALUE_TAG)])) {
+            println "Replacing $defaultString to $esString."
+            defaultText = defaultText.replace(defaultString, esString)
+          }
+        }
+      }
+      defaultFile.write(defaultText, UTF8)
+
+      println "Finish changing default texts to Spanish ones."
+    }
+  }
 }
