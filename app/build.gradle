@@ -31,7 +31,7 @@ android {
       applicationIdSuffix ".demo"
     }
     spain {
-      resConfigs "es"
+      resConfigs "es" // For excluding other locales.
       applicationIdSuffix ".spain"
     }
   }
