@@ -1,6 +1,8 @@
 OneLocaleSample
 ========
-   
+
+[Blog post "How to Include Only One Locale in the APK"](http://szagurskii.com/blog/how-to-include-only-one-locale-in-the-apk/).
+
 ### License
 
     The MIT License (MIT)
